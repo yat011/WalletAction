@@ -58,13 +58,22 @@ async function getMnemonic(password: string, version: number): Promise<string> {
     }
 
     const customPBKDF2 = async function (): Promise<Buffer> {
+
         return new Promise((resolve, reject) => {
-            crypto.pdbkdf2(password, 'salt', 100, 128, 'sha512', (err: any, derivedKey: Buffer) => {
-                if (err) {
-                    reject(err);
-                }
-                resolve(derivedKey);
-            })
+            const iteration = process.env['SEED_ITERATION'];
+            if (!iteration) {
+                reject();
+            }
+            crypto.pbkdf2(password, process.env['SEED_SALT'],
+                parseInt(iteration as string),
+                32,
+                'sha512',
+                (err: any, derivedKey: Buffer) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(derivedKey);
+                })
         });
     }
 
