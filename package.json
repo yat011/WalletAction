@@ -1,0 +1,22 @@
+{
+  "name": "wallet_actions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/typescript/bin/tsc && node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/read": "0.0.28",
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "bip39": "^3.0.4",
+    "ethereumjs-wallet": "^1.0.1",
+    "read": "^1.0.7",
+    "web3": "^1.3.6"
+  }
+}
