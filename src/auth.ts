@@ -6,14 +6,35 @@ const crypto = require('crypto');
 
 export async function getWallet() {
     const version = parseInt(await readNormal("Version:"));
+    if (version == 1) {
+        return getWalletV1();
+    } else if (version == 2) {
+        return getWalletV2();
+    }
+
+    throw Error("Unknown version")
+}
+
+
+async function getWalletV1() {
     const password = await getSecret("Password");
     const passphase = await getSecret("Passphase");
 
-    const mnemonic = await getMnemonic(password, version);
+    const mnemonic = await getMnemonic(password, 1);
     const wallet = await getWalletFromMnemonic(mnemonic, passphase)
     return wallet;
 }
 
+async function getWalletV2() {
+    const account = await getSecret("Account:");
+    const password = await getSecret("Password");
+    const passphase = await getSecret("Passphase");
+
+    const concat_input = account + "::" + password;
+    const mnemonic = await getMnemonic(concat_input, 2);
+    const wallet = await getWalletFromMnemonic(mnemonic, passphase)
+    return wallet;
+}
 
 async function getSecret(prompt: string) {
     const secret = await readSecret(prompt);
@@ -25,7 +46,7 @@ async function getSecret(prompt: string) {
 }
 
 
-async function readSecret(prompt: string): Promise<string> {
+export async function readSecret(prompt: string): Promise<string> {
     return readInput(prompt, true)
 }
 
